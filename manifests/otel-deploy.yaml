@@ -1,46 +1,49 @@
----
-
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ns1 
+  name: otel-sample
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otel-example-deployment
-  namespace: ns1
+  name: otel-sample-deployment
+  namespace: otel-sample
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: otel-example
+      app: otel-sample
   strategy:
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 25%
     type: RollingUpdate
-  serviceAccount: otel-collector-deployment
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        app: otel-example
+        app: otel-sample
     spec:
       containers:
-      - name: otel-example
-        image: quay.io/rhn_support_nigsmith/testapp-otel-ping:latest
-        imagePullPolicy: Always
+      - name: otel-sample
         ports:
-        - containerPort: 8080
+        - containerPort: 8090
           protocol: TCP
         env:
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: http://otel-collector-deployment.observability.svc.cluster.local:4317
+          value: http://otel-collector.observability.svc.cluster.local:4317
         - name: OTEL_EXPORTER_OTLP_PROTOCOL
           value: grpc
         - name: OTEL_SERVICE_NAME
-          value: otel-example-service
+          value: otel-sample-service
+        image: quay.io/rhn_support_nigsmith/testapp-otel-ping
+        imagePullPolicy: Always
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

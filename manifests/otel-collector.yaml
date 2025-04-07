@@ -1,5 +1,3 @@
----
-
 apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
@@ -8,10 +6,14 @@ metadata:
 spec:
   config:
     exporters:
+      otlp:
+        endpoint: "http://logging-loki-gateway-http.openshift-logging.svc.cluster.local:8080"  
+        tls:
+          insecure: true
       debug:
         verbosity: detailed
     processors:
-      batch: {} 
+      batch: null
       memory_limiter:
         check_interval: 1s
         limit_percentage: 50
@@ -41,6 +43,7 @@ spec:
         traces:
           exporters:
           - debug
+          - otlp
           processors:
           - memory_limiter
           - resourcedetection
@@ -62,4 +65,4 @@ spec:
   targetAllocator:
     allocationStrategy: consistent-hashing
     filterStrategy: relabel-config
-  upgradeStrategy: automatic-
+  upgradeStrategy: automatic

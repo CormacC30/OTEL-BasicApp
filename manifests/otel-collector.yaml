@@ -6,8 +6,8 @@ metadata:
 spec:
   config:
     exporters:
-      otlp:
-        endpoint: "http://logging-loki-gateway-http.openshift-logging.svc.cluster.local:8080"  
+      otlphttp:
+        endpoint: "http://logging-loki-distributor-http.openshift-logging.svc.cluster.local:3100"  
         tls:
           insecure: true
       debug:
@@ -43,7 +43,7 @@ spec:
         traces:
           exporters:
           - debug
-          - otlp
+          - otlphttp
           processors:
           - memory_limiter
           - resourcedetection

@@ -6,10 +6,10 @@ metadata:
 spec:
   config:
     exporters:
-      otlphttp:
-        endpoint: "http://logging-loki-distributor-http.openshift-logging.svc.cluster.local:3100"  
-        tls:
-          insecure: true
+      # otlphttp:
+      #  endpoint: "http://logging-loki-distributor-http.openshift-logging.svc.cluster.local:3100"  
+      #   tls:
+      #     insecure: true
       debug:
         verbosity: detailed
     processors:
@@ -43,7 +43,7 @@ spec:
         traces:
           exporters:
           - debug
-          - otlphttp
+          # - otlphttp
           processors:
           - memory_limiter
           - resourcedetection
